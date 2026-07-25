@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="花掉首富的钱！45 秒内尽可能多地挥霍 4000 亿美元，冲击今日排行榜。">
+  <title>花掉首富的钱！</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="花掉首富的钱">
+        <span class="brand-mark">M</span>
+        <span>
+          <strong>花掉首富的钱！</strong>
+          <small>45 秒 · 冲击今日榜首</small>
+        </span>
+      </a>
+      <div class="live-status" id="liveStatus">
+        <i></i>
+        <span>RANK</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow">ELON'S LIVE NET WORTH</p>
+        <h1 id="balance">$400,000,000,000</h1>
+        <div class="income-chip" id="incomeChip">↗ 每秒仍在赚 $5.4K</div>
+        <p class="income-note">按 2024 年身家增长折算 · 游戏估值</p>
+
+        <div class="timer-card">
+          <div>
+            <span>挑战倒计时</span>
+            <strong id="timeText">00:45</strong>
+          </div>
+          <div class="timer-goal">
+            <span>本局目标</span>
+            <strong>尽可能多花钱</strong>
+          </div>
+          <div class="progress-track">
+            <i id="progressBar"></i>
+          </div>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="本局统计">
+        <div>
+          <span>已经花掉</span>
+          <strong id="spentText">$0</strong>
+        </div>
+        <div>
+          <span>财富消耗率</span>
+          <strong class="green" id="spentPercent">0.00%</strong>
+        </div>
+        <div>
+          <span>购买件数</span>
+          <strong id="purchaseCount">0</strong>
+        </div>
+      </section>
+
+      <div class="ticker">
+        <span>⚡</span>
+        <p id="latestAction">限时内尽可能多花钱，金额越高，排名越靠前。</p>
+      </div>
+
+      <section class="leaderboard panel">
+        <div class="section-head">
+          <div>
+            <p class="section-kicker">DAILY RANKING</p>
+            <h2>今日排行榜</h2>
+            <small id="leaderboardScope">正在加载今日榜…</small>
+          </div>
+          <div class="my-rank hidden" id="myRank">我的 #1</div>
+        </div>
+        <div id="leaderboardRows" class="leaderboard-rows"></div>
+      </section>
+
+      <section class="shop">
+        <div class="section-head shop-heading">
+          <div>
+            <p class="section-kicker">THE SHOPPING LIST</p>
+            <h2>疯狂购物清单</h2>
+            <small>$5 — $137.5B 全价格梯度 · 低价不限量</small>
+          </div>
+          <div class="item-total">34 件商品</div>
+        </div>
+        <div id="productGroups"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>纯属娱乐的虚拟财富模拟器，与任何人物或公司无关。</p>
+    </footer>
+  </div>
+
+  <dialog class="game-dialog" id="startDialog">
+    <div class="dialog-glow"></div>
+    <div class="dialog-icon">🏁</div>
+    <p class="dialog-kicker">DAILY SPENDING RACE</p>
+    <h2>花掉首富的钱！</h2>
+    <strong class="dialog-callout">45 秒挥霍 4000 亿</strong>
+    <p>没有必须清零。所有商品开局可买，倒计时结束后按照实际支出进入今日排行榜。</p>
+    <label class="nickname-field">
+      <span>排行榜昵称</span>
+      <input id="nicknameInput" maxlength="10" autocomplete="nickname" placeholder="输入昵称">
+    </label>
+    <button class="primary-button" id="startButton">开始挑战 <span>→</span></button>
+  </dialog>
+
+  <dialog class="game-dialog result-dialog" id="resultDialog">
+    <div class="dialog-glow"></div>
+    <div class="dialog-icon" id="resultEmoji">🏁</div>
+    <p class="dialog-kicker">CHALLENGE COMPLETE</p>
+    <h2 id="resultTitle">本局花掉 $0</h2>
+    <p id="resultMessage">成绩正在记录。</p>
+    <div class="result-stats">
+      <div><span>财富消耗率</span><strong id="resultPercent">0.00%</strong></div>
+      <div><span>购买件数</span><strong id="resultCount">0 件</strong></div>
+    </div>
+    <button class="primary-button" id="replayButton">再挑战一次 <span>↻</span></button>
+    <button class="ghost-button" id="closeResultButton">查看今日排行榜</button>
+  </dialog>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>

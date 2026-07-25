@@ -1,0 +1,185 @@
+<view class="page-shell">
+  <view class="ambient ambient-one"></view>
+  <view class="ambient ambient-two"></view>
+
+  <view class="nav">
+    <view class="brand">
+      <view class="brand-mark">M</view>
+      <view>
+        <view class="brand-title">花掉首富的钱！</view>
+        <view class="brand-subtitle">45 秒 · 冲击今日榜首</view>
+      </view>
+    </view>
+    <view class="status-dot {{status === 'playing' ? 'is-live' : ''}}">
+      <view class="dot"></view>
+      {{status === 'playing' ? 'LIVE' : 'RANK'}}
+    </view>
+  </view>
+
+  <view class="hero">
+    <view class="eyebrow">ELON'S LIVE NET WORTH</view>
+    <view class="balance">{{balanceText}}</view>
+    <view class="income-chip {{pulseIncome ? 'pulse' : ''}}">
+      <text class="trend">↗</text>
+      每秒仍在赚 {{incomeText}}
+    </view>
+    <view class="income-basis">按 2024 年身家增长折算 · 游戏估值</view>
+
+    <view class="timer-card">
+      <view class="timer-top">
+        <view>
+          <view class="timer-label">挑战倒计时</view>
+          <view class="timer-value">{{timeText}}</view>
+        </view>
+        <view class="target">
+          <view class="target-label">本局目标</view>
+          <view class="target-value">尽可能多花钱</view>
+        </view>
+      </view>
+      <view class="progress-track">
+        <view class="progress-fill" style="width: {{progress}}%"></view>
+      </view>
+    </view>
+  </view>
+
+  <view class="stats">
+    <view class="stat">
+      <view class="stat-label">已经花掉</view>
+      <view class="stat-value">{{spentText}}</view>
+    </view>
+    <view class="divider"></view>
+    <view class="stat">
+      <view class="stat-label">财富消耗率</view>
+      <view class="stat-value green">{{spentPercent}}%</view>
+    </view>
+    <view class="divider"></view>
+    <view class="stat">
+      <view class="stat-label">购买件数</view>
+      <view class="stat-value">{{purchaseCount}}</view>
+    </view>
+  </view>
+
+  <view class="ticker">
+    <view class="ticker-icon">⚡</view>
+    <view class="ticker-text">{{latestAction}}</view>
+  </view>
+
+  <view class="leaderboard-card">
+    <view class="leaderboard-head">
+      <view>
+        <view class="section-title">今日排行榜</view>
+        <view class="section-caption">{{leaderboardScope}} · 按支出金额排名</view>
+      </view>
+      <view class="rank-badge" wx:if="{{currentRank > 0}}">我的 #{{currentRank}}</view>
+    </view>
+    <view class="leaderboard-empty" wx:if="{{leaderboard.length === 0}}">
+      今天还没有成绩，第一名等你来拿。
+    </view>
+    <view class="rank-row" wx:for="{{leaderboard}}" wx:key="id" wx:for-item="rankItem">
+      <view class="rank-number top-{{rankItem.rank}}">{{rankItem.rank}}</view>
+      <view class="rank-name">{{rankItem.name}}</view>
+      <view class="rank-count">{{rankItem.purchaseCount}} 件</view>
+      <view class="rank-score">{{rankItem.scoreText}}</view>
+    </view>
+  </view>
+
+  <view class="shop-head">
+    <view>
+      <view class="section-title">疯狂购物清单</view>
+      <view class="section-caption">$5 — $137.5B 全价格梯度 · 低价不限量</view>
+    </view>
+    <view class="shop-count">{{products.length}} 件商品</view>
+  </view>
+
+  <view class="category-group" wx:for="{{productGroups}}" wx:key="id" wx:for-item="group">
+    <view class="category-head">
+      <view class="category-icon">{{group.emoji}}</view>
+      <view class="category-copy">
+        <view class="category-name">{{group.name}}</view>
+        <view class="category-caption">{{group.caption}}</view>
+      </view>
+      <view class="category-count">{{group.items.length}} 项</view>
+    </view>
+
+    <view class="product-grid">
+      <view class="product-card {{!item.canBuy && item.count === 0 ? 'disabled' : ''}}" wx:for="{{group.items}}" wx:key="id" wx:for-item="item">
+        <view class="product-top">
+          <view class="product-emoji">{{item.emoji}}</view>
+          <view class="product-meta">
+            <view class="owned" wx:if="{{item.count > 0}}">×{{item.count}}</view>
+            <view class="stock {{item.isSoldOut ? 'sold-out' : ''}}">{{item.stockText}}</view>
+          </view>
+        </view>
+        <view class="product-name">{{item.name}}</view>
+        <view class="product-note">{{item.note}}</view>
+        <view class="product-bottom">
+          <view class="price-stack">
+            <view class="product-price">{{item.priceText}}</view>
+            <view class="price-tier">{{item.tierText}}</view>
+          </view>
+          <view class="stepper">
+            <view
+              class="step-button minus {{item.count <= 0 || status !== 'playing' ? 'button-disabled' : ''}}"
+              data-id="{{item.id}}"
+              catchtap="sellItem"
+            >−</view>
+            <view
+              class="step-button plus {{!item.canBuy || status !== 'playing' ? 'button-disabled' : ''}}"
+              data-id="{{item.id}}"
+              catchtap="buyItem"
+            >＋</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-space safe-bottom"></view>
+
+  <view class="start-overlay" wx:if="{{status === 'ready'}}">
+    <view class="start-panel">
+      <view class="start-icon">🏁</view>
+      <view class="start-kicker">DAILY SPENDING RACE</view>
+      <view class="start-title">
+        <text class="start-title-main">花掉首富的钱！</text>
+        <text class="start-title-callout">45 秒挥霍 4000 亿</text>
+        <text class="start-title-sub">冲上今日花钱榜首</text>
+      </view>
+      <view class="start-desc">
+        没有必须清零，也没有自动捐赠。所有商品开局可买，最终按实际支出进入今日排行榜。
+      </view>
+      <view class="nickname-field">
+        <view class="nickname-label">排行榜昵称</view>
+        <input
+          class="nickname-input"
+          value="{{nickname}}"
+          maxlength="10"
+          bindinput="onNicknameInput"
+          placeholder="输入昵称"
+        />
+      </view>
+      <button class="primary-button" bindtap="startChallenge">开始挑战 <text>→</text></button>
+    </view>
+  </view>
+
+  <view class="result-overlay" wx:if="{{showResult}}">
+    <view class="result-panel">
+      <view class="result-glow"></view>
+      <view class="result-emoji">{{resultEmoji}}</view>
+      <view class="result-title">{{resultTitle}}</view>
+      <view class="result-message">{{resultMessage}}</view>
+      <view class="result-summary">
+        <view>
+          <text class="summary-label">财富消耗率</text>
+          <text class="summary-value">{{spentPercent}}%</text>
+        </view>
+        <view>
+          <text class="summary-label">购买件数</text>
+          <text class="summary-value">{{purchaseCount}} 件</text>
+        </view>
+      </view>
+      <button class="primary-button" bindtap="replay">再挑战一次 <text>↻</text></button>
+      <button class="ghost-button" bindtap="closeResult">查看今日排行榜</button>
+    </view>
+  </view>
+</view>

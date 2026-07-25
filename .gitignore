@@ -1,0 +1,20 @@
+# 微信开发者工具本机配置
+project.private.config.json
+debug.log
+
+# Cloudflare / Node 本地文件
+.wrangler/
+.dev.vars
+.env
+.env.*
+node_modules/
+
+# 浏览器与测试临时文件
+.edge-test-profile/
+preview-*.png
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
