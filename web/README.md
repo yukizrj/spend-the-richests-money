@@ -1,6 +1,6 @@
 # Cloudflare Web 版
 
-这是“花掉首富的钱！”的 Cloudflare Pages 版本。前端不需要构建，排行榜使用 Pages Functions + D1。
+这是“花掉首富的钱！”的 Cloudflare Pages 版本。前端不需要构建，排行榜使用 Pages Functions + D1。D1 Binding 通过 Cloudflare 网页控制台管理，避免本地 Wrangler 配置锁定控制台设置。
 
 ## 完全免费方案
 
