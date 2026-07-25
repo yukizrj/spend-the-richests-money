@@ -2,9 +2,13 @@
 
 这是“花掉首富的钱！”的 Cloudflare Pages 版本。前端不需要构建，排行榜使用 Pages Functions + D1。D1 Binding 通过 Cloudflare 网页控制台管理，避免本地 Wrangler 配置锁定控制台设置。
 
+## 在线体验
+
+[https://spend-the-richests-money.pages.dev/](https://spend-the-richests-money.pages.dev/)
+
 ## 完全免费方案
 
-不需要购买域名。Cloudflare Pages 会免费提供类似下面的公开地址：
+不需要购买域名。当前游戏使用 Cloudflare Pages 免费提供的公开地址：
 
 ```text
 https://spend-the-richests-money.pages.dev
