@@ -254,6 +254,7 @@ function renderStats() {
 function updateCompactHud() {
   const heroBottom = document.querySelector('.hero').getBoundingClientRect().bottom
   const visible = isPlaying() && heroBottom < 72
+  elements.compactHud.hidden = !visible
   elements.compactHud.classList.toggle('visible', visible)
   elements.compactHud.setAttribute('aria-hidden', String(!visible))
 }
