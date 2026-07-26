@@ -92,7 +92,19 @@ const elements = {
   resultTitle: $('#resultTitle'),
   resultMessage: $('#resultMessage'),
   resultPercent: $('#resultPercent'),
-  resultCount: $('#resultCount')
+  resultCount: $('#resultCount'),
+  decisionDialog: $('#decisionDialog'),
+  decisionQuestion: $('#decisionQuestion'),
+  decisionAsset: $('#decisionAsset'),
+  decisionPrompt: $('#decisionPrompt'),
+  decisionOptions: $('#decisionOptions'),
+  decisionResult: $('#decisionResult'),
+  decisionResultIcon: $('#decisionResultIcon'),
+  decisionChoice: $('#decisionChoice'),
+  decisionResultTitle: $('#decisionResultTitle'),
+  decisionResultMessage: $('#decisionResultMessage'),
+  decisionDelta: $('#decisionDelta'),
+  decisionContinueButton: $('#decisionContinueButton')
 }
 
 const state = {
@@ -108,7 +120,13 @@ const state = {
   runId: '',
   nickname: '',
   leaderboard: [],
-  leaderboardMode: 'local'
+  leaderboardMode: 'local',
+  decisionOpen: false,
+  decisionSeenAssets: new Set(),
+  decisionMisses: 0,
+  decisionCount: 0,
+  decisionStartedAt: 0,
+  currentDecision: null
 }
 
 function formatMoney(value) {
@@ -245,9 +263,10 @@ function setAction(message) {
 }
 
 function buyProduct(id) {
-  if (!isPlaying()) return
+  if (!isPlaying() || state.decisionOpen) return
   const product = state.products.find(item => item.id === id)
   if (!product || isSoldOut(product) || state.balance < product.price) return
+  const isFirstPurchase = product.count === 0
   product.count += 1
   state.balance -= product.price
   state.spent += product.price
@@ -255,10 +274,11 @@ function buyProduct(id) {
   setAction(`买下「${product.name}」−${formatMoney(product.price)}`)
   renderStats()
   renderProducts()
+  if (isFirstPurchase) maybeOpenDecision(product)
 }
 
 function sellProduct(id) {
-  if (!isPlaying()) return
+  if (!isPlaying() || state.decisionOpen) return
   const product = state.products.find(item => item.id === id)
   if (!product || product.count <= 0) return
   product.count -= 1
@@ -270,12 +290,93 @@ function sellProduct(id) {
   renderProducts()
 }
 
+function maybeOpenDecision(product) {
+  const events = window.STRATEGIC_EVENT_BANK[product.id]
+  if (!events || state.decisionSeenAssets.has(product.id)) return
+
+  state.decisionSeenAssets.add(product.id)
+  if (state.decisionCount >= window.STRATEGIC_EVENT_RULES.maxEventsPerRun) return
+
+  const chance = Math.min(
+    0.75,
+    window.STRATEGIC_EVENT_RULES.baseChance
+      + state.decisionMisses * window.STRATEGIC_EVENT_RULES.chanceStep
+  )
+  const shouldTrigger = state.decisionMisses >= window.STRATEGIC_EVENT_RULES.pityAfterMisses
+    || Math.random() < chance
+
+  if (!shouldTrigger) {
+    state.decisionMisses += 1
+    return
+  }
+
+  const decisionEvent = events[Math.floor(Math.random() * events.length)]
+  state.decisionMisses = 0
+  state.decisionCount += 1
+  state.decisionOpen = true
+  state.decisionStartedAt = Date.now()
+  state.currentDecision = { product, event: decisionEvent }
+
+  elements.decisionAsset.textContent = product.name
+  elements.decisionPrompt.textContent = decisionEvent.prompt
+  elements.decisionOptions.innerHTML = decisionEvent.options.map((option, index) => `
+    <button class="decision-option" data-decision-index="${index}">
+      <span>${index === 0 ? 'A' : 'B'}</span>
+      ${escapeHtml(option.label)}
+    </button>
+  `).join('')
+  elements.decisionQuestion.classList.remove('hidden')
+  elements.decisionResult.classList.add('hidden')
+  elements.decisionDialog.showModal()
+}
+
+function chooseDecision(optionIndex) {
+  if (!state.decisionOpen || !state.currentDecision) return
+
+  const option = state.currentDecision.event.options[optionIndex]
+  if (!option) return
+
+  const outcome = option.outcomes[Math.floor(Math.random() * option.outcomes.length)]
+  const rawDelta = Math.round(state.currentDecision.product.price * outcome.ratio)
+  const delta = rawDelta < 0 ? Math.max(rawDelta, -state.balance) : rawDelta
+  state.balance = Math.max(0, state.balance + delta)
+  const positive = delta >= 0
+  const deltaText = `${positive ? '+' : '−'}${formatMoney(Math.abs(delta))}`
+
+  elements.decisionChoice.textContent = `你选择了：${option.label}`
+  elements.decisionResultTitle.textContent = positive ? '项目传来好消息' : '项目出现额外损失'
+  elements.decisionResultMessage.textContent = outcome.message
+  elements.decisionDelta.textContent = deltaText
+  elements.decisionDelta.classList.toggle('positive', positive)
+  elements.decisionDelta.classList.toggle('negative', !positive)
+  elements.decisionResultIcon.textContent = positive ? '↗' : '↘'
+  elements.decisionResultIcon.classList.toggle('positive', positive)
+  elements.decisionResultIcon.classList.toggle('negative', !positive)
+  elements.decisionQuestion.classList.add('hidden')
+  elements.decisionResult.classList.remove('hidden')
+  setAction(`${state.currentDecision.product.name}事件结算 ${deltaText}`)
+  renderStats()
+  renderProducts()
+}
+
+function continueAfterDecision() {
+  if (!state.decisionOpen) return
+
+  const now = Date.now()
+  const pausedMs = Math.max(0, now - state.decisionStartedAt)
+  state.startedAt += pausedMs
+  state.lastTickAt = now
+  state.decisionOpen = false
+  state.currentDecision = null
+  elements.decisionDialog.close()
+}
+
 function formatTime(seconds) {
   return `00:${String(Math.max(0, seconds)).padStart(2, '0')}`
 }
 
 function tick() {
-  if (!isPlaying()) return
+  if (!isPlaying() || state.decisionOpen) return
   const now = Date.now()
   const elapsed = now - state.startedAt
   const delta = now - state.lastTickAt
@@ -303,6 +404,11 @@ function startGame() {
   state.earned = 0
   state.purchaseCount = 0
   state.products = createProducts()
+  state.decisionOpen = false
+  state.decisionSeenAssets = new Set()
+  state.decisionMisses = 0
+  state.decisionCount = 0
+  state.currentDecision = null
   state.startedAt = Date.now()
   state.lastTickAt = state.startedAt
   state.runId = `${state.startedAt}-${Math.random().toString(36).slice(2, 8)}`
@@ -317,6 +423,7 @@ function startGame() {
   renderProducts()
   elements.startDialog.close()
   elements.resultDialog.close()
+  if (elements.decisionDialog.open) elements.decisionDialog.close()
   updateCompactHud()
   state.timer = setInterval(tick, 100)
 }
@@ -450,6 +557,12 @@ elements.productGroups.addEventListener('click', event => {
   if (button.dataset.action === 'sell') sellProduct(button.dataset.id)
 })
 
+elements.decisionOptions.addEventListener('click', event => {
+  const button = event.target.closest('button[data-decision-index]')
+  if (!button) return
+  chooseDecision(Number(button.dataset.decisionIndex))
+})
+
 elements.startButton.addEventListener('click', startGame)
 elements.replayButton.addEventListener('click', startGame)
 elements.closeResultButton.addEventListener('click', () => {
@@ -458,6 +571,8 @@ elements.closeResultButton.addEventListener('click', () => {
 })
 
 elements.startDialog.addEventListener('cancel', event => event.preventDefault())
+elements.decisionDialog.addEventListener('cancel', event => event.preventDefault())
+elements.decisionContinueButton.addEventListener('click', continueAfterDecision)
 window.addEventListener('scroll', updateCompactHud, { passive: true })
 
 state.nickname = localStorage.getItem('spendRichestNickname') || defaultNickname()

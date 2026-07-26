@@ -147,6 +147,26 @@
     <button class="ghost-button" id="closeResultButton">查看今日排行榜</button>
   </dialog>
 
+  <dialog class="game-dialog decision-dialog" id="decisionDialog">
+    <div class="decision-status"><i></i> 决策中 · 计时已暂停</div>
+
+    <div id="decisionQuestion">
+      <div class="decision-asset" id="decisionAsset">战略资产</div>
+      <h2 id="decisionPrompt">项目出现了新的情况。</h2>
+      <div class="decision-options" id="decisionOptions"></div>
+    </div>
+
+    <div class="decision-result hidden" id="decisionResult">
+      <div class="decision-result-icon" id="decisionResultIcon">↗</div>
+      <p class="decision-choice" id="decisionChoice">你选择了：</p>
+      <h2 id="decisionResultTitle">项目传来新消息</h2>
+      <p id="decisionResultMessage">项目已经完成结算。</p>
+      <strong class="decision-delta" id="decisionDelta">+$0</strong>
+      <button class="primary-button" id="decisionContinueButton">继续花钱 <span>→</span></button>
+    </div>
+  </dialog>
+
+  <script src="./decision-events.js" defer></script>
   <script src="./app.js" defer></script>
 </body>
 </html>

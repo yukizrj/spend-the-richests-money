@@ -1,3 +1,5 @@
+const { STRATEGIC_EVENT_RULES, STRATEGIC_EVENT_BANK } = require('../../web/decision-events')
+
 const CHALLENGE = {
   initialWealth: 714200000000,
   // 依据 SpaceX IPO 单日账面增幅估算，仅作为游戏速度。
@@ -159,6 +161,16 @@ Page({
     leaderboardScope: '本机今日榜',
     currentRank: 0,
     showCompactStatus: false,
+    showDecision: false,
+    decisionPhase: 'question',
+    decisionAssetName: '',
+    decisionPrompt: '',
+    decisionOptions: [],
+    decisionChoice: '',
+    decisionResultTitle: '',
+    decisionResultMessage: '',
+    decisionDeltaText: '',
+    decisionPositive: false,
     showResult: false,
     resultTitle: '',
     resultMessage: '',
@@ -198,6 +210,10 @@ Page({
     this.startedAt = Date.now()
     this.lastTickAt = this.startedAt
     this.runId = `${this.startedAt}-${Math.random().toString(36).slice(2, 8)}`
+    this.decisionSeenAssets = new Set()
+    this.decisionMisses = 0
+    this.decisionCount = 0
+    this.currentDecision = null
 
     this.setData({
       status: 'playing',
@@ -216,6 +232,8 @@ Page({
       products,
       productGroups: groupProducts(products),
       showCompactStatus: false,
+      showDecision: false,
+      decisionPhase: 'question',
       showResult: false,
       currentRank: 0,
       latestAction: '挑战开始！所有商品均已开放。'
@@ -225,7 +243,7 @@ Page({
   },
 
   tick() {
-    if (this.data.status !== 'playing') return
+    if (this.data.status !== 'playing' || this.data.showDecision) return
 
     const now = Date.now()
     const elapsedMs = now - this.startedAt
@@ -255,7 +273,7 @@ Page({
   },
 
   buyItem(event) {
-    if (this.data.status !== 'playing') return
+    if (this.data.status !== 'playing' || this.data.showDecision) return
 
     const id = event.currentTarget.dataset.id
     const index = this.data.products.findIndex(item => item.id === id)
@@ -289,13 +307,15 @@ Page({
       products,
       productGroups: groupProducts(products),
       latestAction: `买下「${product.name}」−${product.priceText}`
+    }, () => {
+      if (product.count === 0) this.maybeOpenDecision(product)
     })
 
     wx.vibrateShort({ type: 'light' })
   },
 
   sellItem(event) {
-    if (this.data.status !== 'playing') return
+    if (this.data.status !== 'playing' || this.data.showDecision) return
 
     const id = event.currentTarget.dataset.id
     const index = this.data.products.findIndex(item => item.id === id)
@@ -323,6 +343,88 @@ Page({
     })
   },
 
+  maybeOpenDecision(product) {
+    const events = STRATEGIC_EVENT_BANK[product.id]
+    if (!events || this.decisionSeenAssets.has(product.id)) return
+
+    this.decisionSeenAssets.add(product.id)
+    if (this.decisionCount >= STRATEGIC_EVENT_RULES.maxEventsPerRun) return
+
+    const chance = Math.min(
+      0.75,
+      STRATEGIC_EVENT_RULES.baseChance + this.decisionMisses * STRATEGIC_EVENT_RULES.chanceStep
+    )
+    const shouldTrigger = this.decisionMisses >= STRATEGIC_EVENT_RULES.pityAfterMisses
+      || Math.random() < chance
+
+    if (!shouldTrigger) {
+      this.decisionMisses += 1
+      return
+    }
+
+    const decisionEvent = events[Math.floor(Math.random() * events.length)]
+    this.decisionMisses = 0
+    this.decisionCount += 1
+    this.decisionStartedAt = Date.now()
+    this.currentDecision = { product, event: decisionEvent }
+    this.setData({
+      showDecision: true,
+      decisionPhase: 'question',
+      decisionAssetName: product.name,
+      decisionPrompt: decisionEvent.prompt,
+      decisionOptions: decisionEvent.options.map(option => option.label),
+      decisionChoice: '',
+      decisionResultTitle: '',
+      decisionResultMessage: '',
+      decisionDeltaText: '',
+      decisionPositive: false
+    })
+  },
+
+  chooseDecision(event) {
+    if (!this.data.showDecision || this.data.decisionPhase !== 'question' || !this.currentDecision) return
+
+    const optionIndex = Number(event.currentTarget.dataset.index)
+    const option = this.currentDecision.event.options[optionIndex]
+    if (!option) return
+
+    const outcome = option.outcomes[Math.floor(Math.random() * option.outcomes.length)]
+    const rawDelta = Math.round(this.currentDecision.product.price * outcome.ratio)
+    const delta = rawDelta < 0 ? Math.max(rawDelta, -this.data.balance) : rawDelta
+    const balance = Math.max(0, this.data.balance + delta)
+    const products = updateProducts(this.data.products, balance)
+    const positive = delta >= 0
+    const deltaText = `${positive ? '+' : '−'}${formatMoney(Math.abs(delta))}`
+
+    this.setData({
+      balance,
+      balanceText: formatBalance(balance),
+      products,
+      productGroups: groupProducts(products),
+      decisionPhase: 'result',
+      decisionChoice: option.label,
+      decisionResultTitle: positive ? '项目传来好消息' : '项目出现额外损失',
+      decisionResultMessage: outcome.message,
+      decisionDeltaText: deltaText,
+      decisionPositive: positive,
+      latestAction: `${this.currentDecision.product.name}事件结算 ${deltaText}`
+    })
+  },
+
+  continueAfterDecision() {
+    if (!this.data.showDecision || this.data.decisionPhase !== 'result') return
+
+    const now = Date.now()
+    const pausedMs = Math.max(0, now - this.decisionStartedAt)
+    this.startedAt += pausedMs
+    this.lastTickAt = now
+    this.currentDecision = null
+    this.setData({
+      showDecision: false,
+      decisionPhase: 'question'
+    })
+  },
+
   finishChallenge(finalBalance) {
     if (this.data.status !== 'playing') return
     this.clearGameTimer()
@@ -346,6 +448,7 @@ Page({
       timeText: '00:00',
       progress: 0,
       showCompactStatus: false,
+      showDecision: false,
       leaderboard,
       currentRank,
       showResult: true,

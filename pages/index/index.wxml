@@ -181,6 +181,45 @@
     </view>
   </view>
 
+  <view class="decision-overlay" wx:if="{{showDecision}}">
+    <view class="decision-panel">
+      <view class="decision-status">
+        <view class="decision-pause-dot"></view>
+        决策中 · 计时已暂停
+      </view>
+
+      <block wx:if="{{decisionPhase === 'question'}}">
+        <view class="decision-asset">{{decisionAssetName}}</view>
+        <view class="decision-title">{{decisionPrompt}}</view>
+        <view class="decision-options">
+          <button
+            class="decision-option"
+            wx:for="{{decisionOptions}}"
+            wx:key="*this"
+            data-index="{{index}}"
+            bindtap="chooseDecision"
+          >
+            <text class="decision-option-key">{{index === 0 ? 'A' : 'B'}}</text>
+            <text>{{item}}</text>
+          </button>
+        </view>
+      </block>
+
+      <block wx:else>
+        <view class="decision-result-icon {{decisionPositive ? 'positive' : 'negative'}}">
+          {{decisionPositive ? '↗' : '↘'}}
+        </view>
+        <view class="decision-result-kicker">你选择了：{{decisionChoice}}</view>
+        <view class="decision-result-title">{{decisionResultTitle}}</view>
+        <view class="decision-result-message">{{decisionResultMessage}}</view>
+        <view class="decision-delta {{decisionPositive ? 'positive' : 'negative'}}">
+          {{decisionDeltaText}}
+        </view>
+        <button class="primary-button" bindtap="continueAfterDecision">继续花钱 <text>→</text></button>
+      </block>
+    </view>
+  </view>
+
   <view class="result-overlay" wx:if="{{showResult}}">
     <view class="result-panel">
       <view class="result-glow"></view>
