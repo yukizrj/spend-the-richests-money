@@ -1,13 +1,13 @@
 const CONFIG = {
-  initialWealth: 400_000_000_000,
-  incomePerSecond: 5_400,
+  initialWealth: 714_200_000_000,
+  incomePerSecond: 2_180_000,
   durationSeconds: 45
 }
 
 const categories = [
   { id: 'daily', emoji: '🛍️', name: '日常消费', caption: '从一顿饭开始挥霍' },
-  { id: 'digital', emoji: '🎮', name: '数码潮玩', caption: '从游戏机到人工智能实验室' },
-  { id: 'mobility', emoji: '🏎️', name: '豪车出行', caption: '打造首富的移动车库' },
+  { id: 'digital', emoji: '🎮', name: '数码潮玩', caption: '从头显到人工智能算力中心' },
+  { id: 'mobility', emoji: '🏎️', name: '豪车出行', caption: '从电动车到远程宽体客机' },
   { id: 'luxury', emoji: '💎', name: '奢华生活', caption: '钻石、豪宅和传世收藏' },
   { id: 'empire', emoji: '🏙️', name: '资产帝国', caption: '买下建筑、球队与娱乐公司' },
   { id: 'space', emoji: '🚀', name: '太空未来', caption: '把预算烧向月球和火星' }
@@ -21,28 +21,36 @@ const productDefinitions = [
   ['worldtour', 'daily', '🌍', '环球旅行', 25_000, '绕着地球奢游一圈', null],
   ['console', 'digital', '🎮', '游戏主机', 499, '把客厅变成游戏世界', null],
   ['phone', 'digital', '📱', '旗舰手机', 1_499, '送给今天遇到的每个人', null],
+  ['vrheadset', 'digital', '🥽', '空间计算头显', 3_499, '把桌面搬进眼前的空间', null],
   ['gamingpc', 'digital', '🖥️', '顶配游戏电脑', 5_800, '所有配置全部拉满', null],
   ['robot', 'digital', '🤖', '人形机器人', 45_000, '组建一支机器人管家队', null],
   ['ailab', 'digital', '🧠', '人工智能实验室', 4_200_000_000, '训练下一个超级模型', 10],
+  ['aidatacenter', 'digital', '🗄️', 'AI 算力中心', 7_000_000_000, '装满服务器与顶级加速芯片', 6],
   ['cybertruck', 'mobility', '🚙', 'Cybertruck 车队', 98_000_000, '一次买下一千辆', null],
   ['motorcycle', 'mobility', '🏍️', '顶级摩托车', 30_000, '感受首富的风与自由', null],
+  ['electriccar', 'mobility', '🚘', '高性能电动轿车', 95_000, '日常通勤也要零百加速', null],
   ['supercar', 'mobility', '🏎️', '限量超跑', 320_000, '车库永远不嫌大', null],
   ['f1car', 'mobility', '🏁', 'F1 赛车', 15_000_000, '把赛道级速度开回家', null],
   ['privatejet', 'mobility', '✈️', '私人飞机', 65_000_000, '让机场按你的时间起飞', null],
   ['yacht', 'mobility', '🛥️', '超级游艇', 150_000_000, '把海洋变成私人后院', null],
+  ['airliner', 'mobility', '🛫', '远程宽体客机', 250_000_000, '连头等舱和航线一起承包', null],
   ['diamond', 'luxury', '💎', '巨型钻戒', 10_000, '一颗足够耀眼的石头', null],
   ['watch', 'luxury', '⌚', '传世名表', 15_000, '时间也需要奢华包装', null],
   ['villa', 'luxury', '🏡', '海景豪宅', 5_000_000, '每扇窗都能看见海', null],
+  ['rarediamond', 'luxury', '🔷', '稀世彩钻', 50_000_000, '拍卖场压轴登场的收藏级宝石', 3],
   ['artwork', 'luxury', '🖼️', '世界名画', 780_000_000, '把博物馆镇馆之宝带回家', null],
   ['castle', 'luxury', '🏰', '欧洲古堡', 950_000_000, '连历史也一起买下来', null],
   ['club', 'empire', '⚽', '豪门足球俱乐部', 46_800_000_000, '球场、阵容全部拿下', 2],
   ['island', 'empire', '🏝️', '私人岛屿', 480_000_000, '带码头和私人机场', null],
   ['hospital', 'empire', '🏥', '现代医院', 300_000_000, '建一座顶级医疗中心', null],
+  ['luxuryhotel', 'empire', '🏨', '五星级酒店', 600_000_000, '从大堂到顶层套房全部买下', null],
   ['cruise', 'empire', '🚢', '豪华邮轮', 930_000_000, '一座漂在海上的城市', null],
   ['skyscraper', 'empire', '🏙️', '摩天大楼', 850_000_000, '把名字写进城市天际线', null],
   ['studio', 'empire', '🎬', '电影公司', 11_400_000_000, '拍一部火星史诗', 5],
   ['stadium', 'empire', '🏟️', '顶级体育场', 2_100_000_000, '今晚就冠名', 12],
+  ['basketballteam', 'empire', '🏀', '职业篮球队', 7_000_000_000, '球星、主场与冠军梦想打包收购', 4],
   ['gamecompany', 'empire', '👾', '游戏公司', 8_600_000_000, '打造下一个全球爆款', 7],
+  ['orbitalflight', 'space', '👨‍🚀', '载人绕轨旅行', 55_000_000, '买一张真正飞出地球的船票', 6],
   ['mars', 'space', '🪐', '火星殖民计划', 137_500_000_000, '把文明送上另一颗星球', 1],
   ['satellite', 'space', '🛰️', '卫星星座', 5_300_000_000, '把信号铺满天空', 8],
   ['moonbase', 'space', '🌕', '月球基地', 82_300_000_000, '建造人类首个月城', 1],
@@ -64,6 +72,12 @@ const elements = {
   latestAction: $('#latestAction'),
   liveStatus: $('#liveStatus'),
   incomeChip: $('#incomeChip'),
+  itemTotal: $('#itemTotal'),
+  compactHud: $('#compactHud'),
+  compactBalance: $('#compactBalance'),
+  compactTime: $('#compactTime'),
+  compactSpent: $('#compactSpent'),
+  compactProgressBar: $('#compactProgressBar'),
   productGroups: $('#productGroups'),
   leaderboardRows: $('#leaderboardRows'),
   leaderboardScope: $('#leaderboardScope'),
@@ -212,9 +226,18 @@ function renderStats() {
   const totalWealth = CONFIG.initialWealth + state.earned
   const percent = totalWealth ? state.spent / totalWealth * 100 : 0
   elements.balance.textContent = formatBalance(state.balance)
+  elements.compactBalance.textContent = formatBalance(state.balance)
   elements.spentText.textContent = formatMoney(state.spent)
+  elements.compactSpent.textContent = `已花 ${formatMoney(state.spent)}`
   elements.spentPercent.textContent = `${percent.toFixed(2)}%`
   elements.purchaseCount.textContent = state.purchaseCount.toLocaleString('en-US')
+}
+
+function updateCompactHud() {
+  const heroBottom = document.querySelector('.hero').getBoundingClientRect().bottom
+  const visible = isPlaying() && heroBottom < 72
+  elements.compactHud.classList.toggle('visible', visible)
+  elements.compactHud.setAttribute('aria-hidden', String(!visible))
 }
 
 function setAction(message) {
@@ -262,7 +285,9 @@ function tick() {
   const remainingMs = Math.max(0, CONFIG.durationSeconds * 1000 - elapsed)
   const seconds = Math.ceil(remainingMs / 1000)
   elements.timeText.textContent = formatTime(seconds)
+  elements.compactTime.textContent = formatTime(seconds)
   elements.progressBar.style.width = `${remainingMs / (CONFIG.durationSeconds * 1000) * 100}%`
+  elements.compactProgressBar.style.width = `${remainingMs / (CONFIG.durationSeconds * 1000) * 100}%`
   elements.incomeChip.classList.toggle('pulse', Math.floor(elapsed / 1000) % 2 === 0)
   renderStats()
   if (remainingMs <= 0) finishGame()
@@ -282,7 +307,9 @@ function startGame() {
   state.lastTickAt = state.startedAt
   state.runId = `${state.startedAt}-${Math.random().toString(36).slice(2, 8)}`
   elements.timeText.textContent = '00:45'
+  elements.compactTime.textContent = '00:45'
   elements.progressBar.style.width = '100%'
+  elements.compactProgressBar.style.width = '100%'
   elements.liveStatus.classList.add('live')
   elements.liveStatus.querySelector('span').textContent = 'LIVE'
   setAction('挑战开始！所有商品均已开放。')
@@ -290,6 +317,7 @@ function startGame() {
   renderProducts()
   elements.startDialog.close()
   elements.resultDialog.close()
+  updateCompactHud()
   state.timer = setInterval(tick, 100)
 }
 
@@ -300,7 +328,10 @@ async function finishGame() {
   elements.liveStatus.classList.remove('live')
   elements.liveStatus.querySelector('span').textContent = 'RANK'
   elements.timeText.textContent = '00:00'
+  elements.compactTime.textContent = '00:00'
   elements.progressBar.style.width = '0%'
+  elements.compactProgressBar.style.width = '0%'
+  updateCompactHud()
   renderProducts()
 
   const score = Math.floor(state.spent)
@@ -427,9 +458,11 @@ elements.closeResultButton.addEventListener('click', () => {
 })
 
 elements.startDialog.addEventListener('cancel', event => event.preventDefault())
+window.addEventListener('scroll', updateCompactHud, { passive: true })
 
 state.nickname = localStorage.getItem('spendRichestNickname') || defaultNickname()
 elements.nicknameInput.value = state.nickname
+elements.itemTotal.textContent = `${productDefinitions.length} 件商品`
 state.products = createProducts()
 renderProducts()
 renderStats()

@@ -1,7 +1,7 @@
 const CHALLENGE = {
-  initialWealth: 400000000000,
-  // 依据 2024 年身家增长估算，仅作为游戏速度。
-  incomePerSecond: 5400,
+  initialWealth: 714200000000,
+  // 依据 SpaceX IPO 单日账面增幅估算，仅作为游戏速度。
+  incomePerSecond: 2180000,
   durationSeconds: 45
 }
 
@@ -14,32 +14,40 @@ const PRODUCT_DEFINITIONS = [
 
   { id: 'console', category: 'digital', emoji: '🎮', name: '游戏主机', price: 499, note: '把客厅变成游戏世界', stockLimit: null },
   { id: 'phone', category: 'digital', emoji: '📱', name: '旗舰手机', price: 1499, note: '送给今天遇到的每个人', stockLimit: null },
+  { id: 'vrheadset', category: 'digital', emoji: '🥽', name: '空间计算头显', price: 3499, note: '把桌面搬进眼前的空间', stockLimit: null },
   { id: 'gamingpc', category: 'digital', emoji: '🖥️', name: '顶配游戏电脑', price: 5800, note: '所有配置全部拉满', stockLimit: null },
   { id: 'robot', category: 'digital', emoji: '🤖', name: '人形机器人', price: 45000, note: '组建一支机器人管家队', stockLimit: null },
   { id: 'ailab', category: 'digital', emoji: '🧠', name: '人工智能实验室', price: 4200000000, note: '训练下一个超级模型', stockLimit: 10 },
+  { id: 'aidatacenter', category: 'digital', emoji: '🗄️', name: 'AI 算力中心', price: 7000000000, note: '装满服务器与顶级加速芯片', stockLimit: 6 },
 
   { id: 'cybertruck', category: 'mobility', emoji: '🚙', name: 'Cybertruck 车队', price: 98000000, note: '一次买下一千辆', stockLimit: null },
   { id: 'motorcycle', category: 'mobility', emoji: '🏍️', name: '顶级摩托车', price: 30000, note: '感受首富的风与自由', stockLimit: null },
+  { id: 'electriccar', category: 'mobility', emoji: '🚘', name: '高性能电动轿车', price: 95000, note: '日常通勤也要零百加速', stockLimit: null },
   { id: 'supercar', category: 'mobility', emoji: '🏎️', name: '限量超跑', price: 320000, note: '车库永远不嫌大', stockLimit: null },
   { id: 'f1car', category: 'mobility', emoji: '🏁', name: 'F1 赛车', price: 15000000, note: '把赛道级速度开回家', stockLimit: null },
   { id: 'privatejet', category: 'mobility', emoji: '✈️', name: '私人飞机', price: 65000000, note: '让机场按你的时间起飞', stockLimit: null },
   { id: 'yacht', category: 'mobility', emoji: '🛥️', name: '超级游艇', price: 150000000, note: '把海洋变成私人后院', stockLimit: null },
+  { id: 'airliner', category: 'mobility', emoji: '🛫', name: '远程宽体客机', price: 250000000, note: '连头等舱和航线一起承包', stockLimit: null },
 
   { id: 'diamond', category: 'luxury', emoji: '💎', name: '巨型钻戒', price: 10000, note: '一颗足够耀眼的石头', stockLimit: null },
   { id: 'watch', category: 'luxury', emoji: '⌚', name: '传世名表', price: 15000, note: '时间也需要奢华包装', stockLimit: null },
   { id: 'villa', category: 'luxury', emoji: '🏡', name: '海景豪宅', price: 5000000, note: '每扇窗都能看见海', stockLimit: null },
+  { id: 'rarediamond', category: 'luxury', emoji: '🔷', name: '稀世彩钻', price: 50000000, note: '拍卖场压轴登场的收藏级宝石', stockLimit: 3 },
   { id: 'club', category: 'empire', emoji: '⚽', name: '豪门足球俱乐部', price: 46800000000, note: '球场、阵容全部拿下', stockLimit: 2 },
   { id: 'island', category: 'empire', emoji: '🏝️', name: '私人岛屿', price: 480000000, note: '带码头和私人机场', stockLimit: null },
   { id: 'artwork', category: 'luxury', emoji: '🖼️', name: '世界名画', price: 780000000, note: '把博物馆镇馆之宝带回家', stockLimit: null },
   { id: 'castle', category: 'luxury', emoji: '🏰', name: '欧洲古堡', price: 950000000, note: '连历史也一起买下来', stockLimit: null },
 
   { id: 'hospital', category: 'empire', emoji: '🏥', name: '现代医院', price: 300000000, note: '建一座顶级医疗中心', stockLimit: null },
+  { id: 'luxuryhotel', category: 'empire', emoji: '🏨', name: '五星级酒店', price: 600000000, note: '从大堂到顶层套房全部买下', stockLimit: null },
   { id: 'cruise', category: 'empire', emoji: '🚢', name: '豪华邮轮', price: 930000000, note: '一座漂在海上的城市', stockLimit: null },
   { id: 'skyscraper', category: 'empire', emoji: '🏙️', name: '摩天大楼', price: 850000000, note: '把名字写进城市天际线', stockLimit: null },
   { id: 'studio', category: 'empire', emoji: '🎬', name: '电影公司', price: 11400000000, note: '拍一部火星史诗', stockLimit: 5 },
   { id: 'stadium', category: 'empire', emoji: '🏟️', name: '顶级体育场', price: 2100000000, note: '今晚就冠名', stockLimit: 12 },
+  { id: 'basketballteam', category: 'empire', emoji: '🏀', name: '职业篮球队', price: 7000000000, note: '球星、主场与冠军梦想打包收购', stockLimit: 4 },
   { id: 'gamecompany', category: 'empire', emoji: '👾', name: '游戏公司', price: 8600000000, note: '打造下一个全球爆款', stockLimit: 7 },
 
+  { id: 'orbitalflight', category: 'space', emoji: '👨‍🚀', name: '载人绕轨旅行', price: 55000000, note: '买一张真正飞出地球的船票', stockLimit: 6 },
   { id: 'mars', category: 'space', emoji: '🪐', name: '火星殖民计划', price: 137500000000, note: '把文明送上另一颗星球', stockLimit: 1 },
   { id: 'satellite', category: 'space', emoji: '🛰️', name: '卫星星座', price: 5300000000, note: '把信号铺满天空', stockLimit: 8 },
   { id: 'moonbase', category: 'space', emoji: '🌕', name: '月球基地', price: 82300000000, note: '建造人类首个月城', stockLimit: 1 },
@@ -49,8 +57,8 @@ const PRODUCT_DEFINITIONS = [
 
 const PRODUCT_CATEGORIES = [
   { id: 'daily', emoji: '🛍️', name: '日常消费', caption: '从一顿饭开始挥霍' },
-  { id: 'digital', emoji: '🎮', name: '数码潮玩', caption: '从游戏机到人工智能实验室' },
-  { id: 'mobility', emoji: '🏎️', name: '豪车出行', caption: '打造首富的移动车库' },
+  { id: 'digital', emoji: '🎮', name: '数码潮玩', caption: '从头显到人工智能算力中心' },
+  { id: 'mobility', emoji: '🏎️', name: '豪车出行', caption: '从电动车到远程宽体客机' },
   { id: 'luxury', emoji: '💎', name: '奢华生活', caption: '钻石、豪宅和传世收藏' },
   { id: 'empire', emoji: '🏙️', name: '资产帝国', caption: '买下建筑、球队与娱乐公司' },
   { id: 'space', emoji: '🚀', name: '太空未来', caption: '把预算烧向月球和火星' }
@@ -150,6 +158,7 @@ Page({
     leaderboard: [],
     leaderboardScope: '本机今日榜',
     currentRank: 0,
+    showCompactStatus: false,
     showResult: false,
     resultTitle: '',
     resultMessage: '',
@@ -167,6 +176,13 @@ Page({
 
   onUnload() {
     this.clearGameTimer()
+  },
+
+  onPageScroll(event) {
+    const showCompactStatus = this.data.status === 'playing' && event.scrollTop > 320
+    if (showCompactStatus !== this.data.showCompactStatus) {
+      this.setData({ showCompactStatus })
+    }
   },
 
   onNicknameInput(event) {
@@ -199,6 +215,7 @@ Page({
       purchaseCount: 0,
       products,
       productGroups: groupProducts(products),
+      showCompactStatus: false,
       showResult: false,
       currentRank: 0,
       latestAction: '挑战开始！所有商品均已开放。'
@@ -328,6 +345,7 @@ Page({
       timeLeft: 0,
       timeText: '00:00',
       progress: 0,
+      showCompactStatus: false,
       leaderboard,
       currentRank,
       showResult: true,

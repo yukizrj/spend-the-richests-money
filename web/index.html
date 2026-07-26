@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#07111f">
-  <meta name="description" content="花掉首富的钱！45 秒内尽可能多地挥霍 4000 亿美元，冲击今日排行榜。">
+  <meta name="description" content="花掉首富的钱！45 秒内尽可能多地挥霍 7142 亿美元，冲击今日排行榜。">
   <title>花掉首富的钱！</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
@@ -13,6 +13,25 @@
   <div class="app-shell">
     <div class="ambient ambient-one"></div>
     <div class="ambient ambient-two"></div>
+
+    <aside class="compact-hud" id="compactHud" aria-hidden="true">
+      <div class="compact-hud-main">
+        <div class="compact-balance">
+          <span>可用余额</span>
+          <strong id="compactBalance">$714,200,000,000</strong>
+        </div>
+        <div class="compact-time">
+          <span>剩余时间</span>
+          <strong id="compactTime">00:45</strong>
+        </div>
+      </div>
+      <div class="compact-hud-bottom">
+        <strong id="compactSpent">已花 $0</strong>
+        <div class="compact-progress" aria-hidden="true">
+          <i id="compactProgressBar"></i>
+        </div>
+      </div>
+    </aside>
 
     <header class="site-header">
       <a class="brand" href="./" aria-label="花掉首富的钱">
@@ -31,9 +50,9 @@
     <main>
       <section class="hero">
         <p class="eyebrow">ELON'S LIVE NET WORTH</p>
-        <h1 id="balance">$400,000,000,000</h1>
-        <div class="income-chip" id="incomeChip">↗ 每秒仍在赚 $5.4K</div>
-        <p class="income-note">按 2024 年身家增长折算 · 游戏估值</p>
+        <h1 id="balance">$714,200,000,000</h1>
+        <div class="income-chip" id="incomeChip">↗ 每秒仍在赚 $2.2M</div>
+        <p class="income-note">按 SpaceX IPO 单日账面增幅折算 · 游戏估值</p>
 
         <div class="timer-card">
           <div>
@@ -89,7 +108,7 @@
             <h2>疯狂购物清单</h2>
             <small>$5 — $137.5B 全价格梯度 · 低价不限量</small>
           </div>
-          <div class="item-total">34 件商品</div>
+          <div class="item-total" id="itemTotal">42 件商品</div>
         </div>
         <div id="productGroups"></div>
       </section>
@@ -105,7 +124,7 @@
     <div class="dialog-icon">🏁</div>
     <p class="dialog-kicker">DAILY SPENDING RACE</p>
     <h2>花掉首富的钱！</h2>
-    <strong class="dialog-callout">45 秒挥霍 4000 亿</strong>
+    <strong class="dialog-callout">45 秒挥霍 7142 亿</strong>
     <p>没有必须清零。所有商品开局可买，倒计时结束后按照实际支出进入今日排行榜。</p>
     <label class="nickname-field">
       <span>排行榜昵称</span>

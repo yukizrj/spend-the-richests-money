@@ -2,6 +2,25 @@
   <view class="ambient ambient-one"></view>
   <view class="ambient ambient-two"></view>
 
+  <view class="compact-hud {{showCompactStatus ? 'is-visible' : ''}}" aria-hidden="{{!showCompactStatus}}">
+    <view class="compact-hud-main">
+      <view class="compact-balance">
+        <view class="compact-label">可用余额</view>
+        <view class="compact-value">{{balanceText}}</view>
+      </view>
+      <view class="compact-time">
+        <view class="compact-label">剩余时间</view>
+        <view class="compact-time-value">{{timeText}}</view>
+      </view>
+    </view>
+    <view class="compact-hud-bottom">
+      <view class="compact-spent">已花 {{spentText}}</view>
+      <view class="compact-progress">
+        <view class="compact-progress-fill" style="width: {{progress}}%"></view>
+      </view>
+    </view>
+  </view>
+
   <view class="nav">
     <view class="brand">
       <view class="brand-mark">M</view>
@@ -23,7 +42,7 @@
       <text class="trend">↗</text>
       每秒仍在赚 {{incomeText}}
     </view>
-    <view class="income-basis">按 2024 年身家增长折算 · 游戏估值</view>
+    <view class="income-basis">按 SpaceX IPO 单日账面增幅折算 · 游戏估值</view>
 
     <view class="timer-card">
       <view class="timer-top">
@@ -142,7 +161,7 @@
       <view class="start-kicker">DAILY SPENDING RACE</view>
       <view class="start-title">
         <text class="start-title-main">花掉首富的钱！</text>
-        <text class="start-title-callout">45 秒挥霍 4000 亿</text>
+        <text class="start-title-callout">45 秒挥霍 7142 亿</text>
         <text class="start-title-sub">冲上今日花钱榜首</text>
       </view>
       <view class="start-desc">
