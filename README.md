@@ -31,4 +31,4 @@
 
 独立的响应式 Web 版本位于 [`web/`](./web/)，支持 Cloudflare 免费的 `*.pages.dev` 地址、Pages Functions 和 D1 全站今日排行榜，无需购买域名。完整发布步骤见 [`web/README.md`](./web/README.md)。
 
-在线体验：[https://spend-the-richests-money.pages.dev/](https://spend-the-richests-money.pages.dev/)
+
